@@ -1,0 +1,36 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - uses: actions/checkout@v4
+
+    # Step 2: Setup .NET SDK
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    # Step 3: Restore dependencies (explicitly specify the project file)
+    - name: Restore dependencies
+      run: dotnet restore ./NuGetWebDownloader.csproj  # Указываем путь к .csproj файлу
+
+    # Step 4: Build the project (explicitly specify the project file)
+    - name: Build
+      run: dotnet build ./NuGetWebDownloader.csproj --no-restore  # Указываем путь к .csproj файлу
+
+    # Step 5: Run tests (explicitly specify the project file)
+    - name: Test
+      run: dotnet test ./NuGetWebDownloader.csproj --no-build --verbosity normal  # Указываем путь к .csproj файлу
